@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Página de Senha</title>
+  <style>
+    html,body{height:100%;margin:0;font-family:system-ui,Arial}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center}
+    .card{padding:22px;border:1px solid #ddd;border-radius:8px;width:360px;box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+    input,button,select{width:100%;padding:10px;margin-top:10px;font-size:15px}
+    .hint{font-size:13px;color:#666;margin-top:8px}
+    .err{color:#b00020;margin-top:8px}
+    .ok{color:#0a7f1a;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2>Digite a senha (nome do arquivo)</h2>
+      <input id="senha" placeholder="ex: secret1 ou secret1.html" autocomplete="off"/>
+      <select id="list">
+        <option value="">— Ou escolha um destino —</option>
+        <option value="secret1.html">secret1.html</option>
+        <option value="secret2.html">secret2.html</option>
+        <option value="secret3.html">secret3.html</option>
+        <option value="secret4.html">secret4.html</option>
+      </select>
+      <button id="ok">Entrar</button>
+      <div class="hint">A senha precisa ser exatamente o nome do arquivo (com ou sem <code>.html</code>).</div>
+      <div id="msg" class="err" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <script>
+    const allowed = ["secret1.html","secret2.html","secret3.html","secret4.html"];
+    const senhaInput = document.getElementById("senha");
+    const ok = document.getElementById("ok");
+    const msg = document.getElementById("msg");
+    const sel = document.getElementById("list");
+
+    sel.addEventListener("change", () => {
+      if(sel.value) senhaInput.value = sel.value;
+    });
+
+    function normalize(s) {
+      s = (s||"").trim();
+      if(!s) return "";
+      if(!s.toLowerCase().endsWith(".html")) s = s + ".html";
+      return s;
+    }
+
+    ok.addEventListener("click", () => {
+      msg.textContent = "";
+      const attempted = normalize(senhaInput.value);
+      if(!attempted) { msg.textContent = "Digite uma senha."; return; }
+
+      if(allowed.includes(attempted)) {
+        localStorage.setItem("unlock:" + attempted, Date.now());
+        window.location.href = attempted;
+      } else {
+        msg.textContent = "Senha inválida.";
+      }
+    });
+
+    senhaInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") ok.click();
+    });
+  </script>
+</body>
+</html>
