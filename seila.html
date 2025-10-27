@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>secret4.html</title>
+  <style>body{font-family:system-ui,Arial;margin:24px} .den{color:#b00020} .ok{color:#006400}</style>
+</head>
+<body>
+  <div id="content" style="display:none">
+    <h1>Secret 4</h1>
+    <p class="ok">Bem-vindo à secret4.html — senha correta.</p>
+    <a href="senha.html">Voltar à tela de senha</a>
+  </div>
+
+  <div id="blocked" style="display:none">
+    <h1>Acesso negado</h1>
+    <p class="den">Só entra com a senha (o nome do arquivo). <a href="senha.html">Ir pra senha</a></p>
+  </div>
+
+  <script>
+    const CHECK_FILE = window.location.pathname.split("/").pop();
+    const key = "unlock:" + CHECK_FILE;
+    const unlocked = localStorage.getItem(key);
+    if(unlocked) document.getElementById("content").style.display = "block";
+    else document.getElementById("blocked").style.display = "block";
+  </script>
+</body>
+</html>
